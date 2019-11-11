@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\skuModel;
+use App\SkuModel;
 use Illuminate\Http\Request;
 
-class skuController extends Controller
+class SkuController extends Controller
 {
     //
     const SKUSTATUS = 4;
     public function showSku(Request $request){
         if(is_numeric(($request->all())["productId"])){
-            $data = (new skuModel)->showSku($request->all());
+            $data = (new SkuModel)->showSku($request->all());
             return $data;
         }
     }
     public function createSku(Request $request){
         if(($request->all())["skuStatus"] < self::SKUSTATUS ){
-            $data = (new skuModel)->createSku($request->all());
+            $data = (new SkuModel)->createSku($request->all());
             return $data;
         }
     }
@@ -30,14 +30,14 @@ class skuController extends Controller
             ];
         }
         if(is_numeric(($request->all())["skuId"]) && ($request->all())["skuStatus"] < self::SKUSTATUS ){
-            $data = (new skuModel)->updataSku($request->all());
+            $data = (new SkuModel)->updataSku($request->all());
             return $data;
         }
     }
 
     public function deleteSku(Request $request){
         if(is_numeric(($request->all())["skuId"]) && is_numeric(($request->all())["productId"]) ){
-            $data = (new skuModel)->deleteSku($request->all());
+            $data = (new SkuModel)->deleteSku($request->all());
             return $data;
         }else{
             return [

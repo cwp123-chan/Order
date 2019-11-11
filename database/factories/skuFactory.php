@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\skuModel;
+use App\SkuModel;
 use Faker\Generator as Faker;
 
-$factory->define(skuModel::class, function (Faker $faker) {
+$factory->define(SkuModel::class, function (Faker $faker) {
     return [
         //
         "product_id"=>\App\AdminProductModel::all()->random()->id,

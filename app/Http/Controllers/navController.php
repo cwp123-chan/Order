@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\navModel;
 use Illuminate\Http\Request;
 
-class navController extends Controller
+class NavController extends Controller
 {
     //
     public function showNav(Request $request){

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class orderDetialModel extends Model
+class OrderDetialModel extends Model
 {
     //
     protected $table = "pre_order";

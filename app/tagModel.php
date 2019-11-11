@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class tagModel extends Model
+class TagModel extends Model
 {
   protected $table = "pre_product_tag";
     const TAGMDSTATUS = 4;
@@ -16,7 +16,7 @@ class tagModel extends Model
               "msg" => "该商品不存在"
           ];
       } else {
-          $data = tagModel::where("status","<",self::TAGMDSTATUS)->where("product_id","=",$data["productId"])->get();
+          $data = TagModel::where("status","<",self::TAGMDSTATUS)->where("product_id","=",$data["productId"])->get();
             for ($i = 0 ; $i < count($data) ; $i ++ ){
                 switch($data[$i]["type"]){
                     case "1" : $data[$i]["type"] = "保质期";break;
@@ -56,7 +56,7 @@ class tagModel extends Model
               "msg" => "该商品不存在"
           ];
       } else {
-          $tagData = new tagModel;
+          $tagData = new TagModel;
           $tagData->product_id = $data["productId"];
           $tagData->type = $data["type"];
           $tagData->value = $data["tagValue"];
@@ -69,7 +69,7 @@ class tagModel extends Model
 
     public function updataTag($data)
     {
-        $tagId = tagModel::where("id","=",$data["tagId"])->where("status","<",self::TAGMDSTATUS)->get();
+        $tagId = TagModel::where("id","=",$data["tagId"])->where("status","<",self::TAGMDSTATUS)->get();
 
         $ProId = AdminProductModel::where("id", "=", $data["productId"])->where("status", "<", AdminProductModel::PREDELSTATUS)->get();
         if (count($ProId) == 0) {
@@ -83,7 +83,7 @@ class tagModel extends Model
                 "msg" => "该标签不存在"
             ];
         }else {
-        $tagData = tagModel::find($data["tagId"]);
+        $tagData = TagModel::find($data["tagId"]);
         $tagData->product_id = $data["productId"];
         $tagData->type = $data["type"];
         $tagData->value = $data["tagValue"];
@@ -95,7 +95,7 @@ class tagModel extends Model
     }
 
     public function deleteTag($data){
-        $tagId = tagModel::where("id","=",$data["tagId"])->where("status","<",self::TAGMDSTATUS)->get();
+        $tagId = TagModel::where("id","=",$data["tagId"])->where("status","<",self::TAGMDSTATUS)->get();
         $ProId = AdminProductModel::where("id","=",$data["productId"])->where("status","<",AdminProductModel::PREDELSTATUS)->get();
 
         if(count($ProId) == 0){
@@ -109,7 +109,7 @@ class tagModel extends Model
                 "msg"=>"该标签不存在"
             ];
         }else{
-            $skuData = tagModel::find($data["tagId"]);
+            $skuData = TagModel::find($data["tagId"]);
             $skuData->product_id = $data["productId"];
             $skuData->status = self::TAGMDSTATUS;
             $st = $skuData->save();

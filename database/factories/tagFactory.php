@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\tagModel;
+use App\TagModel;
 use Faker\Generator as Faker;
 
-$factory->define(tagModel::class, function (Faker $faker) {
+$factory->define(TagModel::class, function (Faker $faker) {
     return [
         //
         "product_id"=>\App\AdminProductModel::all()->random()->id,

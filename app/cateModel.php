@@ -2,21 +2,21 @@
 
 namespace App;
 
-use App\Http\Controllers\cateController;
-use App\Http\Controllers\logMsg;
+use App\Http\Controllers\CateController;
+use App\Http\Controllers\LogMsg;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class cateModel extends Model
+class CateModel extends Model
 {
     protected $table = "pre_category";
     public const DELSTATUS = 4;
     public function writeLog($user,$content){
         $file = __FILE__;
-        (new logMsg)->logWrite("admin.log",$user,$content,$file);
+        (new LogMsg)->logWrite("admin.log",$user,$content,$file);
     }
     public function addcate($data){
-        $showData = cateModel::where("status","<",self::DELSTATUS)->where("name","=",$data['categoryName'])->get();
+        $showData = CateModel::where("status","<",self::DELSTATUS)->where("name","=",$data['categoryName'])->get();
         $charArr = $data["categoryCharname"][0];
 
 //        echo ($showData);
@@ -40,7 +40,7 @@ class cateModel extends Model
                 "categoryCharname3"=>$charArr['categoryAttr3']
             ];
             $jsonData = json_encode($dataArr);
-            $cate = new cateModel;
+            $cate = new CateModel;
             $cate->name = $data["categoryName"];
             $cate->property = $jsonData;
             $cate->sort = $data["categorySort"];
@@ -81,9 +81,9 @@ class cateModel extends Model
             }
         }
         if(empty($counts["cateId"])){
-            $showData = cateModel::where("status","<",self::DELSTATUS)->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
+            $showData = CateModel::where("status","<",self::DELSTATUS)->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
         }else{
-            $showData = cateModel::where("status","<",self::DELSTATUS)->where("id","=",$counts["cateId"])->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
+            $showData = CateModel::where("status","<",self::DELSTATUS)->where("id","=",$counts["cateId"])->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
         }
 
 
@@ -114,9 +114,9 @@ class cateModel extends Model
     }
 
     public function updateCate($data){
-        $updataId = cateModel::where("status","<",self::DELSTATUS)->find($data["categoryId"]);
+        $updataId = CateModel::where("status","<",self::DELSTATUS)->find($data["categoryId"]);
         $charArr = $data["categoryCharname"][0];
-        $nameData = cateModel::where("name","=",$data["categoryName"])->get();
+        $nameData = CateModel::where("name","=",$data["categoryName"])->get();
 
         if(empty($updataId)){
             $this->writeLog("superAdmin","分类不存在");
@@ -158,7 +158,7 @@ class cateModel extends Model
     }
 
     public function deleteCate($counts){
-        $updataId = cateModel::where("status","<",self::DELSTATUS)->find($counts);
+        $updataId = CateModel::where("status","<",self::DELSTATUS)->find($counts);
         if(empty($updataId)){
             $this->writeLog("superAdmin","正在修改已被删除的分类或本身不存在的分类 已报错");
             $data = [

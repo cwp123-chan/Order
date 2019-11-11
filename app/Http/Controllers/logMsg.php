@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 * for:record and check
 * */
 
-class logMsg extends Controller
+class LogMsg extends Controller
 {
 
 

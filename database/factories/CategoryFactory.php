@@ -2,11 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\cateModel;
+use App\CateModel;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;  //用于加载字符类型的
 
-$factory->define(cateModel::class, function (Faker $faker) {
+$factory->define(CateModel::class, function (Faker $faker) {
     return [
         //
         "name"=>$faker->word,

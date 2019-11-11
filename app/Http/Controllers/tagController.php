@@ -2,35 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\tagModel;
+use App\TagModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 
-class tagController extends Controller
+class TagController extends Controller
 {
     //
     const TAGSTATUS = 4;
     public $thisUrl = "http://127.0.0.1:8000";
     public function showTag(Request $request){
         if(!empty($request->all()) && !empty(($request->all())["productId"])){
-             $data = (new tagModel)->showTag($request->all());
+             $data = (new TagModel)->showTag($request->all());
              return $data;
          }else {
-            $data = (new tagModel)->showAddTag();
+            $data = (new TagModel)->showAddTag();
             return $data;
         }
     }
     public function createTag(Request $request){
         if(($request->all())["tagStatus"] < self::TAGSTATUS ){
-            $data = (new tagModel)->createTag($request->all());
+            $data = (new TagModel)->createTag($request->all());
             return $data;
         }
     }
 
     public function updataTag(Request $request){
         if(($request->all())["tagStatus"] < self::TAGSTATUS ){
-            $data = (new tagModel)->updataTag($request->all());
+            $data = (new TagModel)->updataTag($request->all());
             return $data;
         }else {
             return [
@@ -42,7 +42,7 @@ class tagController extends Controller
 
     public function deleteTag(Request $request){
         if(is_numeric(($request->all())["tagId"]) && is_numeric(($request->all())["productId"]) ){
-            $data = (new tagModel)->deleteTag($request->all());
+            $data = (new TagModel)->deleteTag($request->all());
             return $data;
         }else{
             return [
@@ -82,7 +82,7 @@ class tagController extends Controller
                 // 假设一个token值
                 $token = md5(date('Y-m-d'));
                 //定义文件名
-                $get = new tagController;
+                $get = new TagController;
                 $filename = $get->get_salt(13, true).'.'.$ext;
                 // 定义 新地址的目录路径
                 $dirname = date('Y/m/d/h/');
@@ -109,7 +109,7 @@ class tagController extends Controller
                         "status"=>"true",
                         "key"=>$key,
                         "value"=>$values,
-                        "tmp"=>(new tagController)->thisUrl.$returnDir
+                        "tmp"=>(new TagController)->thisUrl.$returnDir
                     ];
                 }else{
                     mkdir('./tagControllerImgTmp/'.$token.'/'.$dirname,0700,true);
@@ -124,7 +124,7 @@ class tagController extends Controller
                     return [
                         "status"=>"true",
                         "key"=>$key,
-                        "tmp"=>(new tagController)->thisUrl.$returnDir
+                        "tmp"=>(new TagController)->thisUrl.$returnDir
                     ];
                 }
             }else{

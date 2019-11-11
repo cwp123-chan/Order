@@ -4,15 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class loginModel extends Model
+class LoginModel extends Model
 {
     //
     protected $table = "pre_admin";
     public function login($data)
     {
         if (!empty($data["token"])) {
-            $showData = tokenModel::where("token", "=", $data["token"])->get();
-            $showPwd = loginModel::where("username", "=", $data["username"])->get();
+            $showData = TokenModel::where("token", "=", $data["token"])->get();
+            $showPwd = LoginModel::where("username", "=", $data["username"])->get();
             $pwd = decrypt($showPwd[0]->password);
 
             if (count($showData) !== 0 && $pwd == $data["password"]) {
@@ -28,10 +28,10 @@ class loginModel extends Model
                 ];
             }
         } else {
-            $showPwd = loginModel::where("username", "=", $data["username"])->get();
+            $showPwd = LoginModel::where("username", "=", $data["username"])->get();
             $pwd = decrypt($showPwd[0]->password);
             if (count($showPwd) !== 0 && $pwd == $data["password"]) {
-                $userInfo = registerModel::where("username","=",$data['username'])->get();
+                $userInfo = RegisterModel::where("username","=",$data['username'])->get();
                 $tokenData = [
                     "username"=>$userInfo[0]->username,
                     "password"=>$userInfo[0]->password

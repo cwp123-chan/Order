@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Http\Controllers\logMsg;
+use App\Http\Controllers\LogMsg;
 use Closure;
 use Illuminate\Support\Facades\Response;
 
@@ -17,7 +17,7 @@ class AdminApi
      */
     public function writeLog($user,$content){
         $file = __FILE__;
-        (new logMsg)->logWrite("admin.log",$user,$content,$file);
+        (new LogMsg)->logWrite("admin.log",$user,$content,$file);
     }
     public function handle($request, Closure $next)
     {

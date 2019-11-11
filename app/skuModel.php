@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class skuModel extends Model
+class SkuModel extends Model
 {
     const SKUMDSTATUS = 4;
 
@@ -17,7 +17,7 @@ class skuModel extends Model
                 "msg" => "该商品不存在"
             ];
         } else {
-            $data = skuModel::where("status", "<", self::SKUMDSTATUS)->where("product_id", "=", $data["productId"])->get();
+            $data = SkuModel::where("status", "<", self::SKUMDSTATUS)->where("product_id", "=", $data["productId"])->get();
             for ($i = 0; $i < count($data); $i++) {
                 switch ($data[$i]["status"]) {
                     case "1" :
@@ -50,7 +50,7 @@ class skuModel extends Model
                 "msg"=>"该商品不存在"
             ];
         }else{
-            $skuData = new skuModel;
+            $skuData = new SkuModel;
             $skuData->product_id = $data["productId"];
             $skuData->original_price = $data["productOriPrice"];
             $skuData->price = $data["productLocPrice"];
@@ -67,7 +67,7 @@ class skuModel extends Model
 
     }
     public function updataSku($data){
-        $skuId = skuModel::where("id","=",$data["skuId"])->where("status","<",self::SKUMDSTATUS)->get();
+        $skuId = SkuModel::where("id","=",$data["skuId"])->where("status","<",self::SKUMDSTATUS)->get();
         $ProId = AdminProductModel::where("id","=",$data["productId"])->where("status","<",AdminProductModel::PREDELSTATUS)->get();
         if(count($ProId) == 0){
             return [
@@ -80,7 +80,7 @@ class skuModel extends Model
                 "msg"=>"该分类不存在"
             ];
         }else{
-            $skuData = skuModel::find($data["skuId"]);
+            $skuData = SkuModel::find($data["skuId"]);
             $skuData->product_id = $data["productId"];
             $skuData->original_price = $data["productOriPrice"];
             $skuData->price = $data["productLocPrice"];
@@ -98,7 +98,7 @@ class skuModel extends Model
     }
 
     public function deleteSku($data){
-        $skuId = skuModel::where("id","=",$data["skuId"])->where("status","<",self::SKUMDSTATUS)->get();
+        $skuId = SkuModel::where("id","=",$data["skuId"])->where("status","<",self::SKUMDSTATUS)->get();
         $ProId = AdminProductModel::where("id","=",$data["productId"])->where("status","<",AdminProductModel::PREDELSTATUS)->get();
 
         if(count($ProId) == 0){
@@ -112,7 +112,7 @@ class skuModel extends Model
                 "msg"=>"该分类不存在"
             ];
         }else{
-            $skuData = skuModel::find($data["skuId"]);
+            $skuData = SkuModel::find($data["skuId"]);
             $skuData->product_id = $data["productId"];
             $skuData->status = self::SKUMDSTATUS;
             $st = $skuData->save();

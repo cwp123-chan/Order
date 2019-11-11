@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Http\Controllers\tagController;
+use App\Http\Controllers\TagController;
 use Illuminate\Database\Eloquent\Model;
 
 class navModel extends Model
@@ -43,7 +43,7 @@ class navModel extends Model
         }
         if(empty($counts["id"])){
             $showData = navModel::where("status","<",self::NAVSTATUS)->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
-            $cl = new tagController;
+            $cl = new TagController;
             for($k = 0;$k<count($showData);$k++){
                 $picArr = [];
                 for($i = 0 ; $i < count(json_decode($showData[$k]->picture)); $i ++){
@@ -61,7 +61,7 @@ class navModel extends Model
             return $allData;
         }else{
             $showData = navModel::where("status","<",self::NAVSTATUS)->where("id","=",$counts["id"])->get();
-            $cl = new tagController;
+            $cl = new TagController;
             $picArr = [];
             for($i = 0 ; $i < count(json_decode($showData[0]->picture)); $i ++){
                $adrr =  explode(".",json_decode($showData[0]->picture)[$i])[1].'.'.explode(".",json_decode($showData[0]->picture)[$i])[2];

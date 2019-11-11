@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\loginModel;
+use App\LoginModel;
 use Illuminate\Http\Request;
 
-class loginController extends Controller
+class LoginController extends Controller
 {
     //
     public function login(Request $request){
         if(!empty($request->username)&&!empty($request->password)){
-            $data = (new loginModel)->login($request->all());
+            $data = (new LoginModel)->login($request->all());
             return $data;
         }else{
             return [

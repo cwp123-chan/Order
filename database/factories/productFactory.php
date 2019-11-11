@@ -9,7 +9,7 @@ use Illuminate\Support\Str;  //用于加载字符类型的
 $factory->define(AdminProductModel::class, function (Faker $faker) {
     return [
         //
-        "category_id"=>\App\cateModel::all()->random()->id,
+        "category_id"=>\App\CateModel::all()->random()->id,
         "name"=>$faker->word,
         "sale_num"=>$faker->randomNumber(5,false),
         "content"=>$faker->randomElement([

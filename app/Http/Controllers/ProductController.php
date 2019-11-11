@@ -10,7 +10,7 @@ class ProductController extends Controller
     public const PROSTATUS = 4;
     public function writeLog($user,$content){
         $file = __FILE__;
-        (new logMsg)->logWrite("admin.log",$user,$content,$file);
+        (new LogMsg)->logWrite("admin.log",$user,$content,$file);
     }
 
     public function showProduct(Request $request){

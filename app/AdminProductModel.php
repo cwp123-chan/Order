@@ -2,8 +2,8 @@
 
 namespace App;
 
-use App\Http\Controllers\logMsg;
-use App\tagModel;
+use App\Http\Controllers\LogMsg;
+use App\TagModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -14,7 +14,7 @@ class AdminProductModel extends Model
     public const PREDELSTATUS = 4;
     public function writeLog($user,$content){
         $file = __FILE__;
-        (new logMsg)->logWrite("admin.log",$user,$content,$file);
+        (new LogMsg)->logWrite("admin.log",$user,$content,$file);
     }
     public function showProduct($counts){
         $this->writeLog("superAdmin","展示商品列表");
@@ -49,16 +49,16 @@ class AdminProductModel extends Model
             $showData = AdminProductModel::where("status","<",self::PREDELSTATUS)->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
         }else if(!empty( $counts["productId"]) && !empty( $counts["categoryId"]) && empty($counts["detail"])){
             $showData = AdminProductModel::where("status","<",self::PREDELSTATUS)->where("id","=",$counts["productId"])->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
-            $skuData = skuModel::where("status","<",skuModel::SKUMDSTATUS)->where("product_id","=",$counts["productId"])->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
-            $catesData = cateModel::where("status","<",cateModel::DELSTATUS)->where("id","=",$counts["categoryId"])->get();
+            $skuData = SkuModel::where("status","<",SkuModel::SKUMDSTATUS)->where("product_id","=",$counts["productId"])->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
+            $catesData = CateModel::where("status","<",CateModel::DELSTATUS)->where("id","=",$counts["categoryId"])->get();
 
         }else if(!empty( $counts["productId"]) && !empty( $counts["categoryId"]) && !empty($counts["detail"])){
             if($counts["detail"] == 1){
             $showData = AdminProductModel::where("status","<",self::PREDELSTATUS)->where("id","=",$counts["productId"])->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
-            $skuDataMsg = skuModel::where("status","<",skuModel::SKUMDSTATUS)->where("product_id","=",$counts["productId"])->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
-            $catesDataMsg = cateModel::where("status","<",cateModel::DELSTATUS)->where("id","=",$counts["categoryId"])->get();
-            $allCatesDataMsg = cateModel::where("status","<",cateModel::DELSTATUS)->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
-            $tagDataMsg = tagModel::where("status","<",tagModel::TAGMDSTATUS)->where("product_id","=",$counts["productId"])->get();
+            $skuDataMsg = SkuModel::where("status","<",SkuModel::SKUMDSTATUS)->where("product_id","=",$counts["productId"])->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
+            $catesDataMsg = CateModel::where("status","<",CateModel::DELSTATUS)->where("id","=",$counts["categoryId"])->get();
+            $allCatesDataMsg = CateModel::where("status","<",CateModel::DELSTATUS)->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
+            $tagDataMsg = TagModel::where("status","<",TagModel::TAGMDSTATUS)->where("product_id","=",$counts["productId"])->get();
             }else{
                 return [
                     "status"=>"false",
@@ -67,7 +67,7 @@ class AdminProductModel extends Model
             }
         }else{
             $showData = AdminProductModel::where("status","<",self::PREDELSTATUS)->where("id","=",$counts["productId"])->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
-            $skuData = skuModel::where("status","<",skuModel::SKUMDSTATUS)->where("product_id","=",$counts["productId"])->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
+            $skuData = SkuModel::where("status","<",SkuModel::SKUMDSTATUS)->where("product_id","=",$counts["productId"])->paginate($perPage =$count , $columns = ['*'], $pageName = '', $page = $num);
 
         }
 
@@ -148,7 +148,7 @@ class AdminProductModel extends Model
                 $this->writeLog("superAdmin","当前正在执行的操作====>存入表pre_product_tag");
                 $tagArr = [];
                 for ($i = 0; $i < count($data["tag"]); $i++) {
-                    $tag = new tagModel;
+                    $tag = new TagModel;
                     $tag->product_id =  $product["id"];
                     $tag->status = $data["tag"][$i]["tagStatus"];
                     $tag->value = $data["tag"][$i]["tagValue"];
@@ -160,7 +160,7 @@ class AdminProductModel extends Model
                     $this->writeLog("superAdmin","当前正在执行的操作====>存入表pre_sku");
                     $skuArr = [];
                     for ($i = 0; $i < count($data["sku"]); $i++) {
-                        $sku = new skuModel;
+                        $sku = new SkuModel;
                         $sku->product_id =  $product["id"];
                         $sku->original_price = $data["sku"][$i]["productOriPrice"];
                         $sku->price = $data["sku"][$i]["productLocPrice"];
@@ -238,16 +238,16 @@ class AdminProductModel extends Model
                 for ($i = 0; $i < count($data["tag"]) ; $i++) {
 
                     // 如果前端的标签中 tagid 不存在 或者 对应 的product_id 不正确 则新增标签
-                    $realTag = tagModel::where("id",'=',$data["tag"][$i]["tagId"])->where("product_id","=",$data["productId"])->get();
+                    $realTag = TagModel::where("id",'=',$data["tag"][$i]["tagId"])->where("product_id","=",$data["productId"])->get();
                     if(count($realTag) !== 0){
-                        $tag = tagModel::where("status","<",self::PREDELSTATUS)->find($data["tag"][$i]["tagId"]);
+                        $tag = TagModel::where("status","<",self::PREDELSTATUS)->find($data["tag"][$i]["tagId"]);
                         $tag->product_id = $product["id"];
                         $tag->status = $data["tag"][$i]["tagStatus"];
                         $tag->value = $data["tag"][$i]["tagValue"];
                         $tag->type = $data["tag"][$i]["type"];
                         $result2 = $tag->save();
                     }else{
-                        $tag = new tagModel;
+                        $tag = new TagModel;
                         $tag->product_id = $product["id"];
                         $tag->status = $data["tag"][$i]["tagStatus"];
                         $tag->value = $data["tag"][$i]["tagValue"];
@@ -258,10 +258,10 @@ class AdminProductModel extends Model
                 if($result2){
                     $skuArr = [];
                     for ($i = 0; $i < count($data["sku"]); $i++) {
-                        $realData = skuModel::where("id","=",$data["sku"][$i]["skuId"])->get();
+                        $realData = SkuModel::where("id","=",$data["sku"][$i]["skuId"])->get();
                         if(count($realData) !== 0){
                             $this->writeLog("superAdmin","当前正在执行的操作====>存入表pre_sku".$data["sku"][0]["skuId"]);
-                            $sku = skuModel::where("status","<",self::PREDELSTATUS)->find($data["sku"][$i]["skuId"]);
+                            $sku = SkuModel::where("status","<",self::PREDELSTATUS)->find($data["sku"][$i]["skuId"]);
                             $sku->product_id =  $product["id"];
                             $sku->original_price = $data["sku"][$i]["productOriPrice"];
                             $sku->price = $data["sku"][$i]["productLocPrice"];
@@ -275,7 +275,7 @@ class AdminProductModel extends Model
                             array_push($skuArr,$sku);
                         }else{
 
-                            $sku = new skuModel;
+                            $sku = new SkuModel;
                             $sku->product_id =  $product["id"];
                             $sku->original_price = $data["sku"][$i]["productOriPrice"];
                             $sku->price = $data["sku"][$i]["productLocPrice"];
@@ -338,7 +338,7 @@ class AdminProductModel extends Model
             $product->status = self::PREDELSTATUS;
             $result1 = $product->save();
             if($result1){
-                $showTags = tagModel::where("status","<",self::PREDELSTATUS)->where("product_id","=",$data['productId'])->get();
+                $showTags = TagModel::where("status","<",self::PREDELSTATUS)->where("product_id","=",$data['productId'])->get();
                 $this->writeLog("superAdmin","当前正在执行的操作====>删除Tag");
                 if(count($showTags) == 0){
                     $this->writeLog("superAdmin","当前正在操作 tag表为空");
@@ -350,13 +350,13 @@ class AdminProductModel extends Model
                 }
                 $tagArr = [];
                 for ($i = 0; $i < count($showTags) ; $i++) {
-                    $tag = tagModel::where("status","<",self::PREDELSTATUS)->find($showTags[$i]["id"]);
+                    $tag = TagModel::where("status","<",self::PREDELSTATUS)->find($showTags[$i]["id"]);
                     $tag->status = self::PREDELSTATUS;
                     $result2 = $tag->save();
                     array_push($tagArr,$tag);
                 };
                 if($result2){
-                    $showSkus = skuModel::where("status","<",self::PREDELSTATUS)->where("product_id","=",$data['productId'])->get();
+                    $showSkus = SkuModel::where("status","<",self::PREDELSTATUS)->where("product_id","=",$data['productId'])->get();
                     if(count($showSkus) == 0){
                         $this->writeLog("superAdmin","当前正在操作 tag表为空");
                         DB::commit();
@@ -367,7 +367,7 @@ class AdminProductModel extends Model
                     }
                     $skuArr = [];
                     for ($i = 0; $i < count($showSkus) ; $i++) {
-                        $sku = skuModel::where("status","<",self::PREDELSTATUS)->find($showSkus[$i]["id"]);
+                        $sku = SkuModel::where("status","<",self::PREDELSTATUS)->find($showSkus[$i]["id"]);
                         $sku->status = self::PREDELSTATUS;
                         $result3 = $sku->save();
                         array_push($skuArr,$sku);
